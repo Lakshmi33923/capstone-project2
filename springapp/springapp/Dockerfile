@@ -1,4 +1,4 @@
-sudo cat > /var/lib/jenkins/workspace/project/springapp/springapp/Dockerfile << 'EOF'
+cat > /var/lib/jenkins/workspace/project/springapp/springapp/Dockerfile << 'EOF'
 FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 COPY . .
