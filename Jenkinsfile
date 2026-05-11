@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         AWS_REGION = 'ap-south-1'
-
         ECR_REPO = '962328866838.dkr.ecr.ap-south-1.amazonaws.com'
 
         IMAGE_NAME_NODE = 'node-app'
@@ -36,11 +35,8 @@ pipeline {
             steps {
                 sh '''
                 cd springapp/springapp
-
                 docker build -t $IMAGE_NAME_SPRING .
-
-                docker tag $IMAGE_NAME_SPRING:latest \
-                $ECR_REPO/$IMAGE_NAME_SPRING:latest
+                docker tag $IMAGE_NAME_SPRING:latest $ECR_REPO/$IMAGE_NAME_SPRING:latest
                 '''
             }
         }
@@ -49,11 +45,8 @@ pipeline {
             steps {
                 sh '''
                 cd nodeapp
-
                 docker build -t $IMAGE_NAME_NODE .
-
-                docker tag $IMAGE_NAME_NODE:latest \
-                $ECR_REPO/$IMAGE_NAME_NODE:latest
+                docker tag $IMAGE_NAME_NODE:latest $ECR_REPO/$IMAGE_NAME_NODE:latest
                 '''
             }
         }
@@ -62,11 +55,8 @@ pipeline {
             steps {
                 sh '''
                 cd fastapi_app
-
                 docker build -t $IMAGE_NAME_FASTAPI .
-
-                docker tag $IMAGE_NAME_FASTAPI:latest \
-                $ECR_REPO/$IMAGE_NAME_FASTAPI:latest
+                docker tag $IMAGE_NAME_FASTAPI:latest $ECR_REPO/$IMAGE_NAME_FASTAPI:latest
                 '''
             }
         }
@@ -75,12 +65,11 @@ pipeline {
             steps {
                 sh '''
                 docker push $ECR_REPO/$IMAGE_NAME_SPRING:latest
-
                 docker push $ECR_REPO/$IMAGE_NAME_NODE:latest
-
                 docker push $ECR_REPO/$IMAGE_NAME_FASTAPI:latest
                 '''
             }
         }
 
+    }
 }
