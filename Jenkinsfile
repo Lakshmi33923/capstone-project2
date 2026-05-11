@@ -83,40 +83,4 @@ pipeline {
             }
         }
 
-        stage('Deploy on Private EC2 using SSM') {
-            steps {
-                sh '''
-                aws ssm send-command \
-                  --instance-ids $PRIVATE_EC2_INSTANCE_ID \
-                  --document-name "AWS-RunShellScript" \
-                  --comment "Deploy Applications" \
-                  --parameters 'commands=[
-                  
-                  "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin '$ECR_REPO'",
-
-                  "docker pull '$ECR_REPO'/'$IMAGE_NAME_SPRING':latest",
-                  "docker pull '$ECR_REPO'/'$IMAGE_NAME_NODE':latest",
-                  "docker pull '$ECR_REPO'/'$IMAGE_NAME_FASTAPI':latest",
-
-                  "docker stop spring-container || true",
-                  "docker rm spring-container || true",
-
-                  "docker stop node-container || true",
-                  "docker rm node-container || true",
-
-                  "docker stop fastapi-container || true",
-                  "docker rm fastapi-container || true",
-
-                  "docker run -d --name spring-container -p 8080:8080 '$ECR_REPO'/'$IMAGE_NAME_SPRING':latest",
-
-                  "docker run -d --name node-container -p 3000:3000 '$ECR_REPO'/'$IMAGE_NAME_NODE':latest",
-
-                  "docker run -d --name fastapi-container -p 5000:5000 '$ECR_REPO'/'$IMAGE_NAME_FASTAPI':latest"
-
-                  ]' \
-                  --region $AWS_REGION
-                '''
-            }
-        }
-    }
 }
